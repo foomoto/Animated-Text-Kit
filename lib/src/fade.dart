@@ -75,6 +75,11 @@ class FadeAnimatedTextKit extends StatefulWidget {
   /// By default it is set to false.
   final bool stopPauseOnTap;
 
+  /// If true the animation will fadeIn the last element
+  ///
+  /// By default it is set to false.
+  final bool fadeInOnEnd;
+
   const FadeAnimatedTextKit(
       {Key key,
       @required this.text,
@@ -91,6 +96,7 @@ class FadeAnimatedTextKit extends StatefulWidget {
       this.alignment = AlignmentDirectional.topStart,
       this.textAlign = TextAlign.start,
       this.repeatForever = false,
+      this.fadeInOnEnd = false,
       this.isRepeatingAnimation = true})
       : super(key: key);
 
@@ -152,6 +158,7 @@ class _FadeTextState extends State<FadeAnimatedTextKit>
       style: widget.textStyle,
       textAlign: widget.textAlign,
     );
+    final bool isLast = _index == widget.text.length - 1;
     return GestureDetector(
       onTap: _onTap,
       child: _isCurrentlyPausing || !_controller.isAnimating
@@ -162,7 +169,7 @@ class _FadeTextState extends State<FadeAnimatedTextKit>
               builder: (BuildContext context, Widget child) {
                 return Opacity(
                   opacity:
-                      _fadeIn.value != 1.0 ? _fadeIn.value : _fadeOut.value,
+                      _fadeIn.value != 1.0 || isLast && widget.fadeInOnEnd ? _fadeIn.value : _fadeOut.value,
                   child: child,
                 );
               },
